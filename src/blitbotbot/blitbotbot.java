@@ -7,7 +7,7 @@ import twitter4j.*;
 
 public class blitbotbot {
 
-	public static void main(String[] args) throws TwitterException {
+	public static void main(String[] args) throws TwitterException, InterruptedException {
 		Twitter twitter = TwitterFactory.getSingleton();
 		long lastStatusId = twitter.getUserTimeline().get(0).getInReplyToStatusId();
 		do {
@@ -20,16 +20,15 @@ public class blitbotbot {
 	                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 	                reply(status.getId(),twitter);
 	                lastStatusId=status.getId();
-	                TimeUnit.MINUTES.sleep(30);
 	            }else {
 	            	System.out.println("duplicate?");
-	            	System.exit(-1);
 	            }
-	        } catch (TwitterException | InterruptedException te) {
+	        } catch (TwitterException te) {
 	            te.printStackTrace();
 	            System.out.println("Failed to get timeline: " + te.getMessage());
 	            System.exit(-1);
 	        }
+			TimeUnit.MINUTES.sleep(30);
 		}while(true);
 	}
 	
