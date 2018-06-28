@@ -20,7 +20,10 @@ public class blitbotbot {
 	                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 	                reply(status.getId(),twitter);
 	                lastStatusId=status.getId();
-	                TimeUnit.MINUTES.sleep(10);
+	                TimeUnit.MINUTES.sleep(30);
+	            }else {
+	            	System.out.println("duplicate?");
+	            	System.exit(-1);
 	            }
 	        } catch (TwitterException | InterruptedException te) {
 	            te.printStackTrace();
@@ -30,8 +33,13 @@ public class blitbotbot {
 		}while(true);
 	}
 	
-	public static void reply(long origStatusId,Twitter twitter) {
-		StatusUpdate stat= new StatusUpdate("@theblitbot lame");
+	public static void reply(long origStatusId,Twitter twitter) throws TwitterException {
+		Status status = twitter.showStatus(origStatusId);
+		StatusUpdate stat;
+		if(status.getText().contains("lame")) {
+			stat = new StatusUpdate("@theblitbot shut up nerd");
+		}else
+			stat = new StatusUpdate("@theblitbot lame");
 		stat.setInReplyToStatusId(origStatusId);
 		try {
 			twitter.updateStatus(stat);
